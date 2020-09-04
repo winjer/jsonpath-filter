@@ -1,0 +1,36 @@
+{
+  "name": "jsonpath-filter",
+  "version": "1.0.0",
+  "description": "Filter objects using jsonpath",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --watch"
+  },
+  "bin": {
+    "jsonfilter": "lib/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winjer/jsonpath-filter.git"
+  },
+  "author": "Doug Winter",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/winjer/jsonpath-filter/issues"
+  },
+  "homepage": "https://github.com/winjer/jsonpath-filter#readme",
+  "devDependencies": {
+    "@types/jsonpath": "^0.2.0",
+    "@types/node": "^14.6.4",
+    "@types/ramda": "^0.27.14",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.3.0",
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "jsonpath": "^1.0.2",
+    "ramda": "^0.27.1",
+    "yargs": "^15.4.1"
+  }
+}
