@@ -1,4 +1,4 @@
-import { make, inject, jsonfilter } from './filter';
+import { make, inject, jsonfilter, update } from './filter';
 
 describe('make', () => {
     test('simple', () => {
@@ -60,5 +60,33 @@ describe('jsonfilter', () => {
     });
     test('two filters', () => {
         expect(jsonfilter({ foo: 'bar', baz: 'quux' }, '$.foo', '$.baz')).toEqual({ foo: 'bar', baz: 'quux' });
+    });
+
+    test('duplicate filters', () => {
+        expect(jsonfilter({ foo: 'bar', baz: 'quux' }, '$.foo', '$.foo')).toEqual({ foo: 'bar' });
+    });
+});
+
+describe('update', () => {
+    test('simple', () => {
+        expect(update({ foo: 'bar' }, 'baz', '$.foo')).toEqual({ foo: 'baz' });
+    });
+    test('exclude', () => {
+        expect(update({ foo: 'bar', baz: 'quux' }, 'quuux', '$.foo')).toEqual({ foo: 'quuux', baz: 'quux' });
+    });
+    test('array', () => {
+        expect(update({ foo: [1, 2, 3] }, 'bar', '$.foo')).toEqual({ foo: 'bar' });
+    });
+    test('deep array', () => {
+        expect(update({ foo: [{ name: 'ann' }, { name: 'fred' }] }, 'bar', '$.foo[*].name')).toEqual({
+            foo: [{ name: 'bar' }, { name: 'bar' }],
+        });
+    });
+    test('two filters', () => {
+        expect(update({ foo: 'bar', baz: 'quux' }, 'quuux', '$.foo', '$.baz')).toEqual({ foo: 'quuux', baz: 'quuux' });
+    });
+
+    test('duplicate filters', () => {
+        expect(update({ foo: 'bar', baz: 'quux' }, 'quuux', '$.foo', '$.foo')).toEqual({ foo: 'quuux', baz: 'quux' });
     });
 });

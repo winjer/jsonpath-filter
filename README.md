@@ -4,7 +4,28 @@ Filter javascript objects using an allow list of jsonpath expressions.
 
 Includes a utility `jsonfilter` which can filter json files.
 
-## Examples
+## The javascript filter function, jsonfilter
+
+    import { jsonfilter } from 'jsonpath-filter';
+
+    const data = {
+        foo: 'bar'
+    };
+    const result = jsonfilter(data, '$.foo');
+    // { foo: 'bar' }
+
+### Be careful about arrays
+
+    If your jsonpath expression matches only some array entries, then you will retrieve them
+    with the correct index. Entries prior to that in the array will be `undefined`.
+
+    const data = {
+        foo: ['a', 'b', 'c']
+    };
+    const result = jsonfilter(data, '$.foo[2]');
+    // { foo: [undefined, undefined, 'c'] }
+
+## Using the jsonfilter tool
 
     cat > sample.json < HERE
     {

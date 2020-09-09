@@ -1,4 +1,4 @@
-import { reverse, reduce, flatten, map, tail, head } from 'ramda';
+import { reverse, reduce, flatten, map, tail, head, curry } from 'ramda';
 import * as jsonpath from 'jsonpath';
 
 export type PathComponent = string | number;
@@ -32,15 +32,20 @@ export const inject = (orig: any, node: Node): any => {
         if (term == '$') {
             return inject(obj, { value: node.value, path });
         }
-        if (typeof obj[term] == 'undefined') {
-            obj[term] = make(path, node.value);
-        } else {
+        if (typeof obj[term] == 'object') {
             obj[term] = inject(obj[term], { value: node.value, path });
+        } else {
+            obj[term] = make(path, node.value);
         }
     }
     return obj;
 };
 
-export const assemble = (nodes: Node[]) => reduce(inject, {}, nodes);
+export const assemble = (nodes: Node[], initial?: any) => reduce(inject, initial ?? {}, nodes);
 
 export const jsonfilter = (obj: any, ...expr: string[]) => assemble(flatten(map((e) => jsonpath.nodes(obj, e), expr)));
+
+export const revalue = (value: any, nodes: Node[]) => map((n: Node) => ({ ...n, value }), nodes);
+
+export const update = (obj: any, value: any, ...expr: string[]) =>
+    assemble(revalue(value, flatten(map((e) => jsonpath.nodes(obj, e), expr))), obj);
