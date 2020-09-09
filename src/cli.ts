@@ -1,5 +1,5 @@
 import * as yargs from 'yargs';
-import { command } from './command';
+import { command, readInput, dump } from './command';
 
 const argv = yargs
     .option('file', {
@@ -39,4 +39,6 @@ if (argv._.length > 1) {
     process.exit(1);
 }
 
-command(argv);
+const input = readInput(argv);
+const output = command(argv, input);
+console.log(dump(output, argv));

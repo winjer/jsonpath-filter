@@ -8,13 +8,13 @@ export interface Argv {
     readonly yaml?: boolean;
     readonly replace?: string;
     readonly expression?: string;
-    readonly _: string[];
+    readonly _?: string[];
 }
 
 export const iscomment = (s: string) => s.length == 0 || s[0] == '#';
 
 export const readInput = (argv: Argv): any => {
-    const file = argv._.length == 1 ? argv._[0] : 0;
+    const file = argv._?.length == 1 ? argv._[0] : 0;
     const content = readFileSync(file, 'utf-8');
     if (argv.yaml) {
         return yaml.safeLoad(content);
@@ -31,25 +31,19 @@ export const dump = (obj: any, argv: Argv): string => {
     }
 };
 
-const execute = (replace: string | undefined, input: any, ...expr: string[]) =>
+const execute = (replace: string | undefined, input: any, ...expr: string[]): any =>
     replace ? update(input, replace, ...expr) : jsonfilter(input, ...expr);
 
-export const command = (argv: Argv) => {
-    const input = readInput(argv);
-
+export const command = (argv: Argv, input: any): any => {
     if (argv.expression) {
-        console.log(JSON.stringify(execute(argv.replace, input, argv.expression as string), null, 2));
-    }
-
-    if (argv.file) {
+        return execute(argv.replace, input, argv.expression as string);
+    } else {
         const filters = reject(
             iscomment,
             readFileSync(argv.file as string)
                 .toString()
                 .split('\n'),
         );
-        const obj = execute(argv.replace, input, ...filters);
-        const output = dump(obj, argv);
-        console.log(output);
+        return execute(argv.replace, input, ...filters);
     }
 };

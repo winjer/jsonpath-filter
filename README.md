@@ -4,7 +4,7 @@ Filter javascript objects using an allow list of jsonpath expressions.
 
 Includes a utility `jsonfilter` which can filter json files.
 
-## The javascript filter function, jsonfilter
+## The javascript filter function, `jsonfilter`
 
     import { jsonfilter } from 'jsonpath-filter';
 
@@ -13,6 +13,17 @@ Includes a utility `jsonfilter` which can filter json files.
     };
     const result = jsonfilter(data, '$.foo');
     // { foo: 'bar' }
+
+## The update filter function, `update`
+
+    import { update } from 'jsonpath-filter';
+
+    const data = {
+        foo: 'bar',
+        wee: 'woo',
+    };
+    const result = update(data, 'baz', '$.foo');
+    // { foo: 'baz', wee: 'woo' }
 
 ### Be careful about arrays
 
@@ -73,6 +84,24 @@ Includes a utility `jsonfilter` which can filter json files.
         },
         {
           "name": "charlie"
+        }
+      ]
+    }
+
+    jsonfilter -r george -f sample.txt sample.json
+    {
+      "zip": [
+        {
+          "name": "george",
+          "age": 22
+        },
+        {
+          "name": "george",
+          "age": 16
+        },
+        {
+          "name": "george"
+          "age": 45
         }
       ]
     }
